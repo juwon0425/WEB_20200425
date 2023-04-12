@@ -18,4 +18,3 @@ const e = '상수1 접근';
 //e = 5;
 //const f  // Error?
 console.log(e);
-//ㅇㄹ
