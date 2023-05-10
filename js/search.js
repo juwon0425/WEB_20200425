@@ -13,7 +13,7 @@ function search_message(){
 		let text=document.getElementById("seatch_message").innerHTML=seatch_array.toString(); //값 변환
 			document.querySeledtor("#form_main").submit();
 	}
-	let search_str = document.querySelector("#search_txt"); // 변수에 저장
+	//let search_str = document.querySelector("#search_txt"); // 변수에 저장
    	document.getElementById("search_message").innerHTML = search_str.value; // 태그에 값 추가
    	console.log(search_str.value); // 콘솔에 출력
 	
