@@ -29,6 +29,10 @@ function logout(){
 	location.href='../index.html';
 }
 function get_id(){
+	if(true){
+		decrypt_text();
+	}
+	else{
     var getParameters = function(paramName){ // 변수 = 함수(이름)
     var returnValue; // 리턴값을 위한 변수 선언
     var url = location.href; // 현재 접속 중인 주소 정보 저장
@@ -41,7 +45,8 @@ function get_id(){
                 return decodeURIComponent(returnValue);
             // 나누어진 값의 비교를 통해 paramName 으로 요청된 데이터의 값만 return
 		    }
-	    } // 2중 for문 끝
+	    } 
+	}// 2중 for문 끝
 	}; // 함수 끝
 alert(getParameters('id') + '님 반갑습니다!'); // 메시지 창 출력
 }
@@ -84,8 +89,10 @@ function init(){
 }
 function session_set(){
 	let id=document.querySelector("#floatingInput");
+	let password=document.querySelector("#floatingPassword");
 	if(sessionStorage){
-		sessionStorage.setltem("Session storage test", id.value);
+		let en_text=encrypt_text(password.value);
+		sessionStorage.setltem("Session_storage_test", en_text);
 	} else{
 		alert("로컬 스토리지 지원 x");
 	}
