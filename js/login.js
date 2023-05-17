@@ -19,11 +19,13 @@ function login(){
 	if(id.value.length===0||password.value.length===0){
 		alert("아이디와 비밀번호를 모두 입력해주세요.")
 	}else{
+		session_set(); //세션 생성
 		form.sbmit();
 	}
 }
 
 function logout(){
+	session_del(); //세션 삭제
 	location.href='../index.html';
 }
 function get_id(){
@@ -40,13 +42,34 @@ function get_id(){
             // 나누어진 값의 비교를 통해 paramName 으로 요청된 데이터의 값만 return
 		    }
 	    } // 2중 for문 끝
-}; // 함수 끝
+	}; // 함수 끝
 alert(getParameters('id') + '님 반갑습니다!'); // 메시지 창 출력
+}
+function getCookie(name){
+	var cookie=document.cookie;
+	console.log("쿠키를 요청합니다.");
+	if(cookie !=""){
+		var cookie_array=cookie.split("; ");
+		for(var index in cookie_array){
+			var cookie_name=cookie_array[index].split("=");
+			
+			if(cookie_name[0]=="id"){
+				return cookie_name[1];
+			}
+		}
+	}
+	return ;
 }
 function deleteCookie(cookieName){
 	var expireDate=new Date();
 	expireDate.setDate(expireDate.getDate()-1);
 	document.cookie=cookieName+"="; expireDate.toGMTString();
+}
+function session_check(){
+	if(sessionStorage.getItem("Session_Storage_test")){
+		alert("이미 로그인 되었습니다.");
+		location.href='index_login.html'; //로그인된 페이지로 이동
+	}
 }
 function init(){
 	let id=document.querySelector("#floatingInput");
@@ -57,4 +80,63 @@ function init(){
 		id.value=get_id;
 		check.checked=true;
 	}
+	session_check(); //세션 유무 검사
+}
+function session_set(){
+	let id=document.querySelector("#floatingInput");
+	if(sessionStorage){
+		sessionStorage.setltem("Session storage test", id.value);
+	} else{
+		alert("로컬 스토리지 지원 x");
+	}
+}
+function session_get(){
+	if(sessionStorage){
+		return sessionStorage.getItem("Session_Storage_test");
+	} else {
+		alert("세션 스토리지 지원 x");
+	}
+}
+function session_del(){
+	//Check if the sessionStorage object exists
+	if(sessionStorage){
+		//Retrieve data
+		sessionStorage.removeItem("Session_Storate_test");
+		alert('로그아웃 버튼 클릭 확인:세션 스토리지를 삭제합니다.');
+	} else {
+		alert("세션 스토리지 지원 x");
+	}
+}
+function encodeByAES256(key,data){
+	const cipher=CryptoJS.AES.encrypt(data,CryptoJS.enc.Utf8.parse(key),{
+		iv:CryptoJS.enc.Utf8.parse(""),
+		padding:CryptoJS.pad.Pkcs7,
+		mode:CryptoJS.mode.CBC
+	});
+	return cipher.toString();
+}
+function decodeByAES256(key, data){
+	const cipher=CryptoJS.AES.decrypt(data,CryptoJS.enc.Utf8.parse(key),{
+		iv:CryptoJS.enc.Utf8.parse(""),
+		padding:CryptoJS.pad.Pkcs7,
+		mode:CryptoJS.mode.CBC
+	});
+	return cipher.toString(CryptoJS.enc.Utf8);
+};
+
+function encrypt_text(password){
+	const k="key"; //클라이언트 키
+	const rk=k.padEnd(32," "); //AES256은 key 길이가 32
+	const b=password;
+	const eb=this.encodeByAES256(rk,b);
+	return eb;
+	console.log(eb);
+}
+
+function decrypt_text(){
+	const k="key"; //서버의 키
+	const rk=k.padEnd(32," "); //AES256은 key 길이가 32
+	const eb=session_get();
+	const b=this.decodeByAES256(rk,eb);
+	console.log(b);
 }
