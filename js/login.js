@@ -24,6 +24,13 @@ function login(){
 	}
 }
 
+function login_count(){
+	logion_cnt
+}
+function logout_count(){
+	logout_cnt
+}
+
 function logout(){
 	session_del(); //세션 삭제
 	location.href='../index.html';
